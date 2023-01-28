@@ -1,0 +1,110 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://fonts/xolfont.tres" type="DynamicFont" id=1]
+[ext_resource path="res://scripts/UI.gd" type="Script" id=2]
+
+[sub_resource type="StyleBoxFlat" id=4]
+bg_color = Color( 0.215686, 0.231373, 0.278431, 1 )
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+shadow_size = 2
+
+[sub_resource type="StyleBoxFlat" id=5]
+bg_color = Color( 0.215686, 0.231373, 0.278431, 1 )
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+shadow_size = 2
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 0.278431, 0.298039, 0.364706, 1 )
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+shadow_size = 2
+
+[sub_resource type="InputEventAction" id=1]
+action = "start_game"
+
+[sub_resource type="ShortCut" id=2]
+shortcut = SubResource( 1 )
+
+[node name="UI" type="CanvasLayer"]
+script = ExtResource( 2 )
+
+[node name="score" type="RichTextLabel" parent="."]
+anchor_right = 1.0
+margin_bottom = 79.0
+custom_fonts/normal_font = ExtResource( 1 )
+bbcode_enabled = true
+bbcode_text = "[center]0[/center]"
+text = "0"
+fit_content_height = true
+scroll_active = false
+
+[node name="message" type="RichTextLabel" parent="."]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_top = -79.0
+margin_bottom = 79.0
+custom_fonts/normal_font = ExtResource( 1 )
+bbcode_enabled = true
+bbcode_text = "[center]Dodge the Creeps![/center]"
+text = "Dodge the Creeps!"
+fit_content_height = true
+scroll_active = false
+
+[node name="startbtn" type="Button" parent="."]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -90.0
+margin_top = -200.0
+margin_right = 90.0
+margin_bottom = -100.0
+focus_mode = 0
+custom_fonts/font = ExtResource( 1 )
+custom_styles/hover = SubResource( 4 )
+custom_styles/pressed = SubResource( 5 )
+custom_styles/normal = SubResource( 3 )
+enabled_focus_mode = 0
+shortcut = SubResource( 2 )
+text = "Start"
+
+[node name="MsgTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="VSlider" type="VSlider" parent="."]
+visible = false
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -30.0
+margin_top = -170.0
+margin_right = -14.0
+margin_bottom = -20.0
+value = 100.0
+
+[connection signal="pressed" from="startbtn" to="." method="_on_start_pressed"]
+[connection signal="timeout" from="MsgTimer" to="." method="_on_msg_timeout"]
+[connection signal="value_changed" from="VSlider" to="." method="volume_changed"]
