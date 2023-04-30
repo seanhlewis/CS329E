@@ -1,0 +1,83 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://scenes/Player.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scripts/Game.gd" type="Script" id=2]
+[ext_resource path="res://scenes/Enemy.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/UI.tscn" type="PackedScene" id=4]
+[ext_resource path="res://art/explode.wav" type="AudioStream" id=5]
+[ext_resource path="res://art/arcade.wav" type="AudioStream" id=6]
+[ext_resource path="res://art/starfield.png" type="Texture" id=7]
+[ext_resource path="res://art/infinitebg.png" type="Texture" id=8]
+[ext_resource path="res://art/laser.wav" type="AudioStream" id=9]
+
+[sub_resource type="Curve2D" id=1]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 480, 0, 0, 0, 0, 0, 480, 720, 0, 0, 0, 0, 0, 720, 0, 0, 0, 0, 0, 0 )
+}
+
+[node name="Game" type="Node"]
+script = ExtResource( 2 )
+enemy_prefab = ExtResource( 3 )
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+offset = Vector2( 0, 550 )
+transform = Transform2D( 1, 0, 0, 1, 0, 550 )
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_mirroring = Vector2( 1024, 960 )
+
+[node name="Sprite" type="Sprite" parent="ParallaxBackground/ParallaxLayer"]
+position = Vector2( 250, -150 )
+rotation = -1.5708
+scale = Vector2( 0.25, 0.25 )
+texture = ExtResource( 8 )
+
+[node name="ParallaxLayer2" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2( 0.95, 0.95 )
+motion_mirroring = Vector2( 601, 800 )
+
+[node name="Sprite" type="Sprite" parent="ParallaxBackground/ParallaxLayer2"]
+position = Vector2( 250, -200 )
+rotation = 1.5708
+texture = ExtResource( 7 )
+
+[node name="Player" parent="." instance=ExtResource( 1 )]
+pause_mode = 2
+visible = false
+
+[node name="EnemyTimer" type="Timer" parent="."]
+wait_time = 0.5
+
+[node name="ScoreTimer" type="Timer" parent="."]
+
+[node name="StartTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="startpos" type="Position2D" parent="."]
+position = Vector2( 240, 450 )
+
+[node name="enemypath" type="Path2D" parent="."]
+curve = SubResource( 1 )
+
+[node name="enemyspawn" type="PathFollow2D" parent="enemypath"]
+
+[node name="UI" parent="." instance=ExtResource( 4 )]
+
+[node name="musicbgm" type="AudioStreamPlayer" parent="."]
+pause_mode = 2
+stream = ExtResource( 6 )
+
+[node name="deathbgm" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 5 )
+
+[node name="laserbgm" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 9 )
+volume_db = -10.519
+
+[connection signal="hit_player" from="Player" to="." method="gameover"]
+[connection signal="paused" from="Player" to="." method="pause_toggle"]
+[connection signal="timeout" from="EnemyTimer" to="." method="_on_enemy_timeout"]
+[connection signal="timeout" from="ScoreTimer" to="." method="_on_score_timeout"]
+[connection signal="timeout" from="StartTimer" to="." method="_on_start_timeout"]
+[connection signal="start_game" from="UI" to="." method="new_game"]
